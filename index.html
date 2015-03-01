@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html data-ng-app="hypocriteApp">
+  <head>
+    <meta charset="utf-8">
+    <title>50 Hypocrites</title>
+    <script src="http://d3js.org/d3.v2.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.js"></script>
+    <script src="js/app.js"></script> 
+    <script src="js/states.js"></script> 
+    <script src="js/popupInfo.js"></script>  
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+  <body data-ng-controller="hypocriteCtrl">
+    <!-- Directive to draw states -->
+    <div data-states 
+         data-state-boundaries="stateBoundaries"
+         data-data="data"
+         data-tooltip-function="tooltipHtml"></div>
+  </body>
+</html>
