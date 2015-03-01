@@ -6,13 +6,14 @@ hypocriteApp.directive('states', function ( /* dependencies */ ) {
     scope: {
         stateBoundaries: '=',  // Object containing coordinates
         data: '=',
-        tooltipFunction: '='   // Get rid of this later.
+        tooltipFunction: '='   // Get rid of this later. Each state can be its own instance of a directive, with tooltip and everything.
     },
     templateUrl: "templates/states.html",
-    link: function ($scope, element, attrs) {
-        var states = {};
-		
-		$scope.draw = function(id, data, toolTip){		
+    link: function ($scope, element, attrs) {		
+		// Suggested idea:
+		// 1) Click state: open the tooltip. Click again, close it
+		$scope.open = false;
+		$scope.draw = function(id, data, toolTip){
 			function mouseOver(p){
 				d3.select("#tooltip").transition().duration(200).style("opacity", .99);      
 				
@@ -22,8 +23,18 @@ hypocriteApp.directive('states', function ( /* dependencies */ ) {
 			}
 			
 			function mouseOut(){
-				d3.select("#tooltip").transition().duration(100000).style("opacity", 0);      
+				d3.select("#tooltip").transition().duration(200).style("opacity", 0);      
 			}	
+
+			function toggle(p) {
+				if ($scope.open) {
+					mouseOut();
+					$scope.open = false;
+				} else {
+					mouseOver(p);
+					$scope.open = true;
+				}
+			}
 			
 			d3.select(id).selectAll(".state")
 				.data($scope.stateBoundaries)
@@ -32,16 +43,15 @@ hypocriteApp.directive('states', function ( /* dependencies */ ) {
 				.attr("class","state")
 				.attr("d", function(p){ return p.d;})
 				.style("fill",function(p){ return $scope.data[p.id].color; })
-				.on("mouseover", mouseOver).on("mouseout", mouseOut);
+				.on("click", toggle);
 		}
-
-		$scope.states = states;
 
 		// Draw states on the state svg
         $scope.draw("#statesvg", $scope.data, $scope.tooltipFunction);
 
         // We could keep track of a selected state, on click, etc
-        scope.$watch('exp', function (newVal, oldVal) {
+        // Nothing useful here.
+        $scope.$watch('exp', function (newVal, oldVal) {
             // ...
         });
     }
